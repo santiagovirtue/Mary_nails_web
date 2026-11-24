@@ -31,7 +31,11 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": [
+                "localhost",
+                "marynailsweb-production.up.railway.app",
+                "*.up.railway.app"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"

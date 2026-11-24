@@ -19,7 +19,10 @@ dotenv.config();
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: ['localhost', 'marynailsweb-production.up.railway.app', '*.up.railway.app'],
+  trustProxyHeaders: true,
+});
 
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
