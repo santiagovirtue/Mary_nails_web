@@ -7,10 +7,13 @@ import { join } from 'node:path';
 dotenv.config({ override: true });
 
 const require = createRequire(import.meta.url);
-const sqlite = require('node:sqlite') as {
-  DatabaseSync: new (path: string) => SqliteDatabase;
-};
-const DatabaseSync = sqlite.DatabaseSync;
+
+function abrirSqlite(ruta: string): SqliteDatabase {
+  const sqlite = require('node:sqlite') as {
+    DatabaseSync: new (path: string) => SqliteDatabase;
+  };
+  return new sqlite.DatabaseSync(ruta);
+}
 
 interface SqliteStatement {
   all(...params: unknown[]): unknown[];
@@ -27,7 +30,7 @@ export type MotorBaseDatos = 'mysql' | 'sqlite';
 let motor: MotorBaseDatos = 'sqlite';
 
 export async function getDbStatus(): Promise<MotorBaseDatos> {
-  await listo;
+  await asegurar();
   return motor;
 }
 
@@ -118,7 +121,7 @@ class PoolSqlite {
 function crearSqlite(): PoolSqlite {
   const carpeta = join(process.cwd(), 'data');
   mkdirSync(carpeta, { recursive: true });
-  const db = new DatabaseSync(join(carpeta, 'mary-nails.sqlite'));
+  const db = abrirSqlite(join(carpeta, 'mary-nails.sqlite'));
   db.exec('PRAGMA foreign_keys = ON');
   db.exec(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -241,31 +244,38 @@ async function intentarMysql(): Promise<mysql.Pool | null> {
 
 type PoolActivo = PoolSqlite | mysql.Pool;
 
-let activo: PoolActivo = crearSqlite();
+let activo: PoolActivo | null = null;
+let listo: Promise<void> | null = null;
 
-const listo: Promise<void> = (async () => {
-  const mysqlPool = await intentarMysql();
-  if (mysqlPool) {
-    activo = mysqlPool;
-    motor = 'mysql';
-    console.log('Conexión a MySQL lista. Base:', process.env['DB_NAME']);
-    return;
+function asegurar(): Promise<void> {
+  if (!listo) {
+    listo = (async () => {
+      const mysqlPool = await intentarMysql();
+      if (mysqlPool) {
+        activo = mysqlPool;
+        motor = 'mysql';
+        console.log('Conexión a MySQL lista. Base:', process.env['DB_NAME']);
+        return;
+      }
+      activo = crearSqlite();
+      motor = 'sqlite';
+      console.log('Base local lista en data/mary-nails.sqlite');
+    })();
   }
-  motor = 'sqlite';
-  console.log('Base local lista en data/mary-nails.sqlite');
-})();
+  return listo;
+}
 
 export const pool = {
   query(sql: string, params?: unknown[]): Promise<[unknown, unknown[]]> {
-    return listo.then(() => (activo as PoolSqlite).query(sql, params));
+    return asegurar().then(() => (activo as PoolSqlite).query(sql, params));
   },
   getConnection() {
-    return listo.then(() => (activo as PoolSqlite).getConnection());
+    return asegurar().then(() => (activo as PoolSqlite).getConnection());
   },
 };
 
 export async function testConnection(): Promise<void> {
-  await listo;
+  await asegurar();
   if (motor === 'mysql') console.log('Mary Nails usa MySQL.');
   else console.log('Mary Nails usa la base local porque MySQL no está disponible.');
 }
