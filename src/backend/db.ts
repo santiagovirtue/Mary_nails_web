@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 import * as dotenv from 'dotenv';
-import { mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 
@@ -8,11 +8,82 @@ dotenv.config({ override: true });
 
 const require = createRequire(import.meta.url);
 
-function abrirSqlite(ruta: string): SqliteDatabase {
-  const sqlite = require('node:sqlite') as {
-    DatabaseSync: new (path: string) => SqliteDatabase;
+interface SqlJsStatement {
+  bind(values?: unknown[]): boolean;
+  step(): boolean;
+  getAsObject(): Record<string, unknown>;
+  free(): void;
+}
+
+interface SqlJsDatabase {
+  run(sql: string, params?: unknown[]): void;
+  exec(sql: string): Array<{ columns: string[]; values: unknown[][] }>;
+  prepare(sql: string): SqlJsStatement;
+  export(): Uint8Array;
+}
+
+function valorSql(valor: unknown): unknown {
+  if (valor === undefined) return null;
+  if (typeof valor === 'bigint') return Number(valor);
+  return valor;
+}
+
+function guardar(db: SqlJsDatabase, ruta: string): void {
+  writeFileSync(ruta, Buffer.from(db.export()));
+}
+
+function envolver(db: SqlJsDatabase, ruta: string): SqliteDatabase {
+  let transaccion = 0;
+  const persistirSiPuede = () => {
+    if (transaccion === 0) guardar(db, ruta);
   };
-  return new sqlite.DatabaseSync(ruta);
+  return {
+    exec(sql: string) {
+      const inicio = /^\s*begin\b/i.test(sql);
+      const cierre = /^\s*(commit|rollback)\b/i.test(sql);
+      if (inicio) transaccion += 1;
+      try {
+        db.exec(sql);
+      } finally {
+        if (cierre) transaccion = Math.max(0, transaccion - 1);
+      }
+      if (!/^\s*pragma\b/i.test(sql)) persistirSiPuede();
+    },
+    prepare(sql: string): SqliteStatement {
+      return {
+        all(...params: unknown[]) {
+          const sentencia = db.prepare(sql);
+          const consulta = params.map(valorSql);
+          if (consulta.length > 0) sentencia.bind(consulta);
+          const filas: Record<string, unknown>[] = [];
+          while (sentencia.step()) filas.push(sentencia.getAsObject());
+          sentencia.free();
+          return filas;
+        },
+        run(...params: unknown[]) {
+          const cambios = params.map(valorSql);
+          if (cambios.length > 0) db.run(sql, cambios);
+          else db.run(sql);
+          const resultado = db.exec('SELECT last_insert_rowid() AS id, changes() AS changes');
+          persistirSiPuede();
+          const valores = resultado[0]?.values[0] ?? [0, 0];
+          return { lastInsertRowid: Number(valores[0] ?? 0), changes: Number(valores[1] ?? 0) };
+        },
+      };
+    },
+  };
+}
+
+async function abrirSqlite(ruta: string): Promise<SqliteDatabase> {
+  const paquete = ['sql', 'js'].join('.');
+  const cargar = require(paquete) as (opciones?: {
+    locateFile?: (archivo: string) => string;
+  }) => Promise<{ Database: new (datos?: Uint8Array) => SqlJsDatabase }>;
+  const SQL = await cargar({
+    locateFile: (archivo) => join(require.resolve(paquete), '..', archivo),
+  });
+  const datos = existsSync(ruta) ? new Uint8Array(readFileSync(ruta)) : undefined;
+  return envolver(new SQL.Database(datos), ruta);
 }
 
 interface SqliteStatement {
@@ -118,10 +189,10 @@ class PoolSqlite {
   }
 }
 
-function crearSqlite(): PoolSqlite {
+async function crearSqlite(): Promise<PoolSqlite> {
   const carpeta = join(process.cwd(), 'data');
   mkdirSync(carpeta, { recursive: true });
-  const db = abrirSqlite(join(carpeta, 'mary-nails.sqlite'));
+  const db = await abrirSqlite(join(carpeta, 'mary-nails.sqlite'));
   db.exec('PRAGMA foreign_keys = ON');
   db.exec(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -257,7 +328,7 @@ function asegurar(): Promise<void> {
         console.log('Conexión a MySQL lista. Base:', process.env['DB_NAME']);
         return;
       }
-      activo = crearSqlite();
+      activo = await crearSqlite();
       motor = 'sqlite';
       console.log('Base local lista en data/mary-nails.sqlite');
     })();
