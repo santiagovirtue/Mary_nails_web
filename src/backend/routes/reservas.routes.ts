@@ -2,6 +2,14 @@ import { Router, Request, Response } from 'express';
 import { pool } from '../db';
 export const reservasRouter = Router();
 
+function normalizarEstado(estado: string): string {
+  return String(estado || '').trim().toLowerCase();
+}
+
+function normalizarMetodo(metodo: string): string {
+  return String(metodo || '').trim().toLowerCase();
+}
+
 function convertirHora(horaTexto: string): string {
   if (!horaTexto) return '00:00:00';
   const primeraPartePura = horaTexto.split('-')[0].trim();
@@ -59,7 +67,7 @@ reservasRouter.post('/', async (req: Request, res: Response) => {
     if (servicios.length === 0) { await connection.rollback(); res.status(400).json({ error: 'Servicio no encontrado' }); return; }
     const { id_servicio, precio } = servicios[0];
     const [citaResult]: any = await connection.query('INSERT INTO citas (id_usuario, id_servicio, fecha, hora, estado, observacion) VALUES (?, ?, ?, ?, ?, ?)', [id_usuario, id_servicio, fecha, horaFormato, 'pendiente', comentarios]);
-    await connection.query('INSERT INTO pagos (id_cita, metodo_pago, valor, estado_pago) VALUES (?, ?, ?, ?)', [citaResult.insertId, metodoPago, precio, 'pendiente']);
+    await connection.query('INSERT INTO pagos (id_cita, metodo_pago, valor, estado_pago) VALUES (?, ?, ?, ?)', [citaResult.insertId, normalizarMetodo(metodoPago), precio, 'pendiente']);
     await connection.commit();
     res.status(201).json({ id: citaResult.insertId, mensaje: 'Reserva creada exitosamente' });
   } catch (error: any) { await connection.rollback(); console.error('ERROR POST /api/reservas:', error.message); res.status(500).json({ error: 'Error al crear reserva', detalle: error.message }); }
@@ -67,16 +75,16 @@ reservasRouter.post('/', async (req: Request, res: Response) => {
 });
 
 reservasRouter.patch('/:id/estado', async (req: Request, res: Response) => {
-  try { const { id } = req.params; const { estado } = req.body; await pool.query('UPDATE citas SET estado = ? WHERE id_cita = ?', [estado, id]); res.json({ mensaje: 'Estado actualizado' }); }
+  try { const { id } = req.params; const { estado } = req.body; await pool.query('UPDATE citas SET estado = ? WHERE id_cita = ?', [normalizarEstado(estado), id]); res.json({ mensaje: 'Estado actualizado' }); }
   catch (error: any) { console.error('ERROR PATCH /api/reservas/estado:', error.message); res.status(500).json({ error: 'Error' }); }
 });
 
 reservasRouter.patch('/:id/pago', async (req: Request, res: Response) => {
-  try { const { id } = req.params; const { estadoPago } = req.body; await pool.query('UPDATE pagos SET estado_pago = ? WHERE id_cita = ?', [estadoPago, id]); res.json({ mensaje: 'Pago actualizado' }); }
+  try { const { id } = req.params; const { estadoPago } = req.body; await pool.query('UPDATE pagos SET estado_pago = ? WHERE id_cita = ?', [normalizarEstado(estadoPago), id]); res.json({ mensaje: 'Pago actualizado' }); }
   catch (error: any) { console.error('ERROR PATCH /api/reservas/pago:', error.message); res.status(500).json({ error: 'Error' }); }
 });
 
 reservasRouter.delete('/:id', async (req: Request, res: Response) => {
-  try { const { id } = req.params; await pool.query('DELETE FROM pagos WHERE id_cita = ?', [id]); await pool.query('DELETE FROM citas WHERE id_cita = ?', [id]); res.json({ mensaje: 'Eliminada' }); }
+  try { const { id } = req.params; await pool.query('DELETE FROM calificaciones WHERE id_cita = ?', [id]); await pool.query('DELETE FROM pagos WHERE id_cita = ?', [id]); await pool.query('DELETE FROM citas WHERE id_cita = ?', [id]); res.json({ mensaje: 'Eliminada' }); }
   catch (error: any) { console.error('ERROR DELETE /api/reservas:', error.message); res.status(500).json({ error: 'Error' }); }
 });

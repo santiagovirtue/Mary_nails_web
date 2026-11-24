@@ -17,7 +17,8 @@ serviciosRouter.post('/', async (req: Request, res: Response) => {
     const { nombre, descripcion, duracion, precio, estado } = req.body;
     const duracionMin = parseInt(duracion) || 60;
     const precioNum = parseFloat(String(precio).replace(/[^0-9.]/g, '')) || 0;
-    const [result]: any = await pool.query('INSERT INTO servicios (nombre, descripcion, precio, duracion_minutos, estado) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, precioNum, duracionMin, estado === 'Activo' ? 'activo' : 'inactivo']);
+    const imagen = req.body.imagen || null;
+    const [result]: any = await pool.query('INSERT INTO servicios (nombre, descripcion, precio, duracion_minutos, estado, imagen) VALUES (?, ?, ?, ?, ?, ?)', [nombre, descripcion, precioNum, duracionMin, estado === 'Activo' ? 'activo' : 'inactivo', imagen]);
     res.status(201).json({ id: result.insertId });
   } catch (error: any) { console.error('ERROR POST /api/servicios:', error.message); res.status(500).json({ error: 'Error al crear servicio', detalle: error.message }); }
 });
@@ -28,7 +29,8 @@ serviciosRouter.put('/:id', async (req: Request, res: Response) => {
     const { nombre, descripcion, duracion, precio, estado } = req.body;
     const duracionMin = parseInt(duracion) || 60;
     const precioNum = parseFloat(String(precio).replace(/[^0-9.]/g, '')) || 0;
-    await pool.query('UPDATE servicios SET nombre=?, descripcion=?, precio=?, duracion_minutos=?, estado=? WHERE id_servicio=?', [nombre, descripcion, precioNum, duracionMin, estado === 'Activo' ? 'activo' : 'inactivo', id]);
+    const imagen = req.body.imagen || null;
+    await pool.query('UPDATE servicios SET nombre=?, descripcion=?, precio=?, duracion_minutos=?, estado=?, imagen=? WHERE id_servicio=?', [nombre, descripcion, precioNum, duracionMin, estado === 'Activo' ? 'activo' : 'inactivo', imagen, id]);
     res.json({ mensaje: 'Actualizado' });
   } catch (error: any) { console.error('ERROR PUT /api/servicios:', error.message); res.status(500).json({ error: 'Error', detalle: error.message }); }
 });

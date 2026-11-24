@@ -8,7 +8,10 @@ CREATE TABLE usuarios (
   telefono VARCHAR(20),
   password VARCHAR(255) NOT NULL,
   rol ENUM('cliente', 'administrador') NOT NULL,
-  fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  direccion TEXT,
+  preferencias TEXT,
+  foto_perfil LONGTEXT
 );
 
 CREATE TABLE servicios (
@@ -17,7 +20,8 @@ CREATE TABLE servicios (
   descripcion TEXT,
   precio DECIMAL(10,2) NOT NULL,
   duracion_minutos INT NOT NULL,
-  estado ENUM('activo', 'inactivo') DEFAULT 'activo'
+  estado ENUM('activo', 'inactivo') DEFAULT 'activo',
+  imagen LONGTEXT
 );
 
 CREATE TABLE disponibilidad (
@@ -67,11 +71,11 @@ INSERT INTO usuarios (nombre, correo, telefono, password, rol) VALUES
 ('Laura Martínez', 'laura@email.com', '3012223344', 'cliente123', 'cliente'),
 ('Camila Torres', 'camila@email.com', '3023334455', 'cliente123', 'cliente');
 
-INSERT INTO servicios (nombre, descripcion, precio, duracion_minutos) VALUES
-('Manicure profesional', 'Limpieza, limado, cuidado de cutícula y esmaltado.', 25000, 45),
-('Pedicure', 'Cuidado completo de pies, limpieza e hidratación.', 30000, 60),
-('Uñas acrílicas', 'Extensión y diseño de uñas acrílicas.', 60000, 90),
-('Diseño personalizado', 'Decoración artística según el gusto del cliente.', 15000, 60);
+INSERT INTO servicios (nombre, descripcion, precio, duracion_minutos, imagen) VALUES
+('Manicure profesional', 'Limpieza, limado, cuidado de cutícula y esmaltado.', 25000, 45, '/img/manicura-perla.jpeg'),
+('Pedicure', 'Cuidado completo de pies, limpieza e hidratación.', 30000, 60, '/img/pedicura.jpeg'),
+('Uñas acrílicas', 'Extensión y diseño de uñas acrílicas.', 60000, 90, '/img/unas-oro.jpeg'),
+('Diseño personalizado', 'Decoración artística según el gusto del cliente.', 15000, 60, '/img/semipermanente-ovalada.jpeg');
 
 INSERT INTO disponibilidad (dia, hora_inicio, hora_fin, estado, observacion) VALUES
 ('Lunes', '09:00:00', '12:00:00', 'disponible', 'Horario de atención normal'),

@@ -3,7 +3,7 @@ import express from 'express';
 import { join } from 'node:path';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { testConnection } from './backend/db';
+import { getDbStatus, testConnection } from './backend/db';
 import { reservasRouter } from './backend/routes/reservas.routes';
 import { serviciosRouter } from './backend/routes/servicios.routes';
 import { disponibilidadRouter } from './backend/routes/disponibilidad.routes';
@@ -36,8 +36,9 @@ app.use('/api/pagos', pagosRouter);
 app.use('/api/reportes', reportesRouter);
 app.use('/api/auth', authRouter);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', mensaje: 'MaryNails API funcionando ✅' });
+app.get('/api/health', async (req, res) => {
+  const baseDeDatos = await getDbStatus();
+  res.json({ status: 'OK', mensaje: 'MaryNails API funcionando ✅', baseDeDatos });
 });
 
 app.get('/img/:filename', (req, res) => {
