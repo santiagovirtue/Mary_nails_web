@@ -39,9 +39,18 @@ app.use('/api/pagos', pagosRouter);
 app.use('/api/reportes', reportesRouter);
 app.use('/api/auth', authRouter);
 
-app.get('/api/health', async (req, res) => {
-  const baseDeDatos = await getDbStatus();
-  res.json({ status: 'OK', mensaje: 'MaryNails API funcionando ✅', baseDeDatos });
+app.get('/api/health', async (_req, res) => {
+  try {
+    const baseDeDatos = await getDbStatus();
+    res.json({ status: 'OK', mensaje: 'MaryNails API funcionando ✅', baseDeDatos });
+  } catch (error) {
+    console.error('Health sin base de datos:', error);
+    res.json({
+      status: 'OK',
+      mensaje: 'API arriba, base de datos no disponible',
+      detalle: error instanceof Error ? error.message : 'error',
+    });
+  }
 });
 
 app.get('/img/:filename', (req, res) => {
@@ -58,11 +67,15 @@ app.use((req, res, next) => {
   ).catch(next);
 });
 
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, async () => {
-    console.log(`🚀 MaryNails server en http://localhost:${port}`);
-    await testConnection();
+if (isMainModule(import.meta.url) || process.env['pm_id'] || process.env['INICIAR_SERVIDOR'] === '1') {
+  const port = Number(process.env['PORT'] || 4000);
+  const servidor = app.listen(port, '0.0.0.0', () => {
+    console.log(`MaryNails server node ${process.version} en 0.0.0.0:${port}`);
+    testConnection().catch((error) => console.error('Base de datos:', error));
+  });
+  servidor.on('error', (error) => {
+    console.error('No se pudo abrir el puerto', error);
+    process.exit(1);
   });
 }
 
