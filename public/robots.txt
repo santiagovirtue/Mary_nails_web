@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /cliente
+
+Sitemap: https://marynailsweb-production.up.railway.app/sitemap.xml

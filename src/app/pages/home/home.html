@@ -1,96 +1,83 @@
 <section class="hero">
-  <div class="hero-content">
-    <span class="tag"><span class="mi mi-sm">auto_awesome</span> Belleza, estilo y cuidado</span>
-    <h1>Mary <span class="highlight">Nails</span></h1>
-    <p class="subtitle">
-      Reserva tus citas de uñas de forma rápida, consulta nuestros servicios,
-      revisa disponibilidad y comunícate fácilmente con nuestro equipo.
+  <div class="hero-copy">
+    <p class="eyebrow">Estudio de uñas en Soacha</p>
+    <h1>Manos cuidadas, con tiempo y detalle.</h1>
+    <p class="lead">
+      Manicure, pedicure y diseños en semipermanente. Elige el servicio,
+      mira un horario libre y reserva sin tener que llamar.
     </p>
-    <div class="hero-buttons">
-      <a routerLink="/reservas" class="btn-primary">Reservar cita ahora</a>
-      <a routerLink="/servicios" class="btn-secondary">Ver servicios</a>
+    <div class="hero-actions">
+      <a routerLink="/reservas" class="btn-primary">Reservar cita</a>
+      <a routerLink="/galeria" class="btn-secondary">Ver el trabajo</a>
     </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number">500+</span>
-        <span class="stat-label">Clientes felices</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">4.6★</span>
-        <span class="stat-label">Calificación</span>
-      </div>
-      <div class="stat">
-        <span class="stat-number">4</span>
-        <span class="stat-label">Servicios</span>
-      </div>
-    </div>
-  </div>
-  <div class="hero-card">
-    <div class="card-badge">Popular</div>
-    <h3>Servicios destacados</h3>
-    <ul>
-      <li><span class="service-icon"><span class="mi">spa</span></span> Manicure profesional</li>
-      <li><span class="service-icon"><span class="mi">self_improvement</span></span> Pedicure</li>
-      <li><span class="service-icon"><span class="mi">favorite</span></span> Uñas acrílicas</li>
-      <li><span class="service-icon"><span class="mi">palette</span></span> Diseños personalizados</li>
+    <ul class="facts">
+      <li><strong>Soacha</strong><span>Cundinamarca</span></li>
+      <li><strong>Lunes a sábado</strong><span>9:00 a. m. – 6:00 p. m.</span></li>
+      <li><strong>Cita en línea</strong><span>Confirmación por WhatsApp</span></li>
     </ul>
-    <a routerLink="/servicios" class="card-link">Ver todos los servicios →</a>
+  </div>
+
+  <div class="mosaic" aria-hidden="false">
+    <img class="mosaic-main" src="/img/baby-boomer.jpeg" alt="Técnica baby boomer realizada en Mary Nails">
+    <img src="/img/unas-oro.jpeg" alt="Uñas semipermanentes con papel de oro">
+    <img src="/img/manicura-perla.jpeg" alt="Manicura con efecto perla">
   </div>
 </section>
 
-<section class="how-it-works">
-  <div class="section-header">
-    <span class="section-tag">Cómo funciona</span>
-    <h2>Reserva tu cita en 3 pasos</h2>
-    <p>Un proceso simple y rápido para conseguir la cita que necesitas</p>
+<section class="work">
+  <div class="section-heading">
+    <p class="eyebrow">El trabajo</p>
+    <h2>Diseños que salen del estudio, no de un catálogo genérico.</h2>
+    <a routerLink="/galeria">Abrir la galería</a>
   </div>
-  <div class="steps">
-    <div class="step">
-      <div class="step-number">1</div>
-      <h3>Elige tu servicio</h3>
-      <p>Explora nuestra galería y descubre el diseño perfecto para ti.</p>
-    </div>
-    <div class="step">
-      <div class="step-number">2</div>
-      <h3>Selecciona fecha y hora</h3>
-      <p>Consulta la disponibilidad en tiempo real y agenda cuando prefieras.</p>
-    </div>
-    <div class="step">
-      <div class="step-number">3</div>
-      <h3>¡Disfruta tu cita!</h3>
-      <p>Nosotros te confirmamos la reserva y te esperamos con todo listo.</p>
-    </div>
+  <div class="work-grid">
+    <a routerLink="/galeria" class="work-card">
+      <img src="/img/semipermanente-ovalada.jpeg" alt="Semipermanente ovalado en color intenso">
+      <span>Color intenso</span>
+    </a>
+    <a routerLink="/galeria" class="work-card">
+      <img src="/img/pedicura.jpeg" alt="Pedicura profesional">
+      <span>Pedicura</span>
+    </a>
+    <a routerLink="/servicios" class="work-card work-note">
+      <p>Semipermanente, baby boomer, efecto perla y cuidado de pies.</p>
+      <strong>Ver servicios y precios</strong>
+    </a>
   </div>
 </section>
 
-<section class="features">
-  <div class="section-header">
-    <span class="section-tag">Ventajas</span>
-    <h2>¿Por qué elegirnos?</h2>
+<section class="steps">
+  <div class="section-heading">
+    <p class="eyebrow">La cita</p>
+    <h2>Tres pasos y el horario queda apartado.</h2>
   </div>
-  <div class="features-grid">
-    <div class="feature">
-      <div class="feature-icon"><span class="mi">event</span></div>
-      <h3>Reservas en línea</h3>
-      <p>Consulta horarios disponibles y solicita tu cita en segundos, desde cualquier dispositivo.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-icon"><span class="mi">photo_library</span></div>
-      <h3>Galería de trabajos</h3>
-      <p>Explora diseños únicos y servicios realizados para inspirarte antes de reservar.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-icon"><span class="mi">settings</span></div>
-      <h3>Panel administrativo</h3>
-      <p>Gestión completa de citas, servicios, horarios, clientes y pagos en un solo lugar.</p>
-    </div>
-  </div>
+  <ol>
+    <li>
+      <span>01</span>
+      <h3>Elige el servicio</h3>
+      <p>Manicure, pedicure o un diseño. El precio y la duración están en la ficha.</p>
+    </li>
+    <li>
+      <span>02</span>
+      <h3>Toma una hora libre</h3>
+      <p>El calendario muestra los espacios que el estudio tiene abiertos.</p>
+    </li>
+    <li>
+      <span>03</span>
+      <h3>Llega a tu hora</h3>
+      <p>Recibes la confirmación y en el estudio ya saben qué vas a hacerte.</p>
+    </li>
+  </ol>
 </section>
 
-<section class="cta">
-  <div class="cta-content">
-    <h2>¿Lista para lucir tus manos increíbles?</h2>
-    <p>Reserva tu cita hoy mismo y déjanos consentirte.</p>
-    <a routerLink="/reservas" class="btn-primary btn-large">Reservar mi cita →</a>
+<section class="visit">
+  <div>
+    <p class="eyebrow">Visítanos</p>
+    <h2>Soacha, de lunes a sábado.</h2>
+    <p>Si prefieres escribir antes de reservar, el mensaje llega directo al estudio.</p>
+  </div>
+  <div class="visit-actions">
+    <a routerLink="/reservas" class="btn-primary">Reservar mi cita</a>
+    <a href="https://api.whatsapp.com/send?phone=573132146285&amp;text=Hola%2C%20quiero%20reservar%20en%20Mary%20Nails." target="_blank" rel="noopener" class="btn-secondary">WhatsApp</a>
   </div>
 </section>

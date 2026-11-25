@@ -9,7 +9,17 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar.css',
 })
 export class Navbar {
+  menuAbierto = false;
+
   constructor(private router: Router) {}
+
+  alternarMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  cerrarMenu(): void {
+    this.menuAbierto = false;
+  }
 
   private obtenerSesion(clave: string): string | null {
     if (typeof window === 'undefined') return null;

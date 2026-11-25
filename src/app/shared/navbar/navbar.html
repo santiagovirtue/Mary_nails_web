@@ -1,21 +1,27 @@
 <header class="navbar">
-  <a routerLink="/" class="logo">Mary Nails</a>
+  <a routerLink="/" class="logo" (click)="cerrarMenu()">
+    <span class="logo-mark">M</span>
+    <span>Mary Nails</span>
+  </a>
 
-  <nav class="nav-links">
-    <a routerLink="/">Inicio</a>
-    <a routerLink="/servicios">Servicios</a>
-    <a routerLink="/galeria">Galería</a>
-    <a routerLink="/reservas">Reservas</a>
-    <a routerLink="/contacto">Contacto</a>
+  <button type="button" class="menu-boton" (click)="alternarMenu()" [attr.aria-expanded]="menuAbierto">
+    {{ menuAbierto ? 'Cerrar' : 'Menú' }}
+  </button>
 
-    <a routerLink="/login" *ngIf="sinSesion" class="btn-client">Cliente</a>
-    <a routerLink="/admin/login" *ngIf="sinSesion" class="btn-admin">Admin</a>
+  <nav class="nav-links" [class.abierto]="menuAbierto">
+    <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }" (click)="cerrarMenu()">Inicio</a>
+    <a routerLink="/servicios" routerLinkActive="activo" (click)="cerrarMenu()">Servicios</a>
+    <a routerLink="/galeria" routerLinkActive="activo" (click)="cerrarMenu()">Galería</a>
+    <a routerLink="/contacto" routerLinkActive="activo" (click)="cerrarMenu()">Contacto</a>
 
-    <a routerLink="/cliente/perfil" *ngIf="clienteLogueado">Mi Perfil</a>
-    <a routerLink="/cliente/mis-citas" *ngIf="clienteLogueado">Mis citas</a>
-    <a routerLink="/cliente/favoritos" *ngIf="clienteLogueado">Favoritos</a>
-    <a routerLink="/cliente/calificar-servicio" *ngIf="clienteLogueado">Calificar</a>
+    <a routerLink="/cliente/perfil" *ngIf="clienteLogueado" (click)="cerrarMenu()">Mi perfil</a>
+    <a routerLink="/cliente/mis-citas" *ngIf="clienteLogueado" (click)="cerrarMenu()">Mis citas</a>
+    <a routerLink="/cliente/favoritos" *ngIf="clienteLogueado" (click)="cerrarMenu()">Favoritos</a>
+    <a routerLink="/cliente/calificar-servicio" *ngIf="clienteLogueado" (click)="cerrarMenu()">Calificar</a>
 
-    <button type="button" class="logout-link" *ngIf="clienteLogueado" (click)="cerrarSesion()">Cerrar sesión</button>
+    <a routerLink="/login" *ngIf="sinSesion" class="link-suave" (click)="cerrarMenu()">Entrar</a>
+    <a routerLink="/admin/login" *ngIf="sinSesion" class="link-suave admin-link" (click)="cerrarMenu()">Admin</a>
+    <a routerLink="/reservas" class="btn-reservar" (click)="cerrarMenu()">Reservar</a>
+    <button type="button" class="logout-link" *ngIf="clienteLogueado" (click)="cerrarSesion()">Salir</button>
   </nav>
 </header>
