@@ -18,6 +18,7 @@ import { Cronograma } from './admin/cronograma/cronograma';
 import { Disponibilidad } from './admin/disponibilidad/disponibilidad';
 import { Calificaciones } from './admin/calificaciones/calificaciones';
 import { ServiciosAdmin } from './admin/servicios-admin/servicios-admin';
+import { CatalogoAdmin } from './admin/catalogo/catalogo';
 import { Pagos } from './admin/pagos/pagos';
 import { Clientes } from './admin/clientes/clientes';
 import { Reportes } from './admin/reportes/reportes';
@@ -85,6 +86,12 @@ export const routes: Routes = [
   {
     path: 'admin/disponibilidad',
     component: Disponibilidad,
+    canActivate: [adminGuard],
+  },
+
+  {
+    path: 'admin/catalogo',
+    component: CatalogoAdmin,
     canActivate: [adminGuard],
   },
 

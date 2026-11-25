@@ -1,0 +1,32 @@
+<section class="catalogo-admin">
+  <div class="catalogo-header">
+    <div>
+      <span class="etiqueta">Gestión</span>
+      <h1>Catálogo de servicios</h1>
+      <p>Las mismas tarjetas que ve el cliente, con la foto, el precio y la duración. Desde aquí también ves los servicios ocultos.</p>
+    </div>
+    <a routerLink="/admin/servicios" class="btn-gestionar">Editar servicios</a>
+  </div>
+
+  <p class="estado" *ngIf="cargando">Cargando el catálogo...</p>
+  <p class="estado" *ngIf="!cargando && servicios.length === 0">Todavía no hay servicios en el catálogo.</p>
+
+  <div class="catalogo-grid" *ngIf="!cargando && servicios.length > 0">
+    <article class="tarjeta" *ngFor="let servicio of servicios; let i = index" [class.oculta]="!estaActivo(servicio)">
+      <div class="foto" *ngIf="servicio.imagen">
+        <img [src]="servicio.imagen" [alt]="servicio.nombre" />
+        <span class="estado-badge" [class.activo]="estaActivo(servicio)">{{ estaActivo(servicio) ? 'Visible' : 'Oculto' }}</span>
+      </div>
+      <div class="sin-foto" *ngIf="!servicio.imagen">
+        <span class="icono">{{ obtenerIcono(i) }}</span>
+        <span class="estado-badge" [class.activo]="estaActivo(servicio)">{{ estaActivo(servicio) ? 'Visible' : 'Oculto' }}</span>
+      </div>
+      <h2>{{ servicio.nombre }}</h2>
+      <p>{{ servicio.descripcion }}</p>
+      <div class="datos">
+        <span>{{ formatearDuracion(servicio) }}</span>
+        <strong>{{ formatearPrecio(servicio) }}</strong>
+      </div>
+    </article>
+  </div>
+</section>
