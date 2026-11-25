@@ -145,6 +145,49 @@
   font-size: 17px;
 }
 
+.aviso {
+  margin: 0 0 18px;
+  background: #e8f5e9;
+  color: #1b5e20;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 700;
+}
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-editar,
+.btn-estado {
+  flex: 1;
+  text-align: center;
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-editar {
+  background: #c2185b;
+  color: white;
+}
+
+.btn-estado {
+  background: white;
+  color: #c2185b;
+  border: 2px solid #c2185b;
+}
+
+.btn-estado:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 @media (max-width: 700px) {
   .catalogo-admin {
     padding: 20px 16px 36px;

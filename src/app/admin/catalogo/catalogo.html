@@ -8,6 +8,8 @@
     <a routerLink="/admin/servicios" class="btn-gestionar">Editar servicios</a>
   </div>
 
+  <p class="aviso" *ngIf="mensaje">{{ mensaje }}</p>
+
   <p class="estado" *ngIf="cargando">Cargando el catálogo...</p>
   <p class="estado" *ngIf="!cargando && servicios.length === 0">Todavía no hay servicios en el catálogo.</p>
 
@@ -26,6 +28,12 @@
       <div class="datos">
         <span>{{ formatearDuracion(servicio) }}</span>
         <strong>{{ formatearPrecio(servicio) }}</strong>
+      </div>
+      <div class="acciones">
+        <a class="btn-editar" [routerLink]="['/admin/servicios']" [queryParams]="{ editar: idDe(servicio) }">Editar</a>
+        <button type="button" class="btn-estado" (click)="cambiarEstado(servicio)" [disabled]="cambiandoId === idDe(servicio)">
+          {{ cambiandoId === idDe(servicio) ? 'Guardando...' : (estaActivo(servicio) ? 'Ocultar' : 'Mostrar') }}
+        </button>
       </div>
     </article>
   </div>

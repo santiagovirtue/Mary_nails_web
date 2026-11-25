@@ -12,6 +12,8 @@ import { HttpClient } from '@angular/common/http';
 export class CatalogoAdmin implements OnInit {
   servicios: any[] = [];
   cargando = true;
+  cambiandoId: number | null = null;
+  mensaje = '';
   private iconos = ['💅', '✨', '🌸', '🎨', '💖', '🦋', '🌺', '💎'];
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
@@ -53,5 +55,34 @@ export class CatalogoAdmin implements OnInit {
     const precio = Number(servicio.precio);
     if (!precio) return 'Consultar';
     return '$' + precio.toLocaleString('es-CO');
+  }
+
+  idDe(servicio: any): number {
+    return Number(servicio.id_servicio || servicio.id);
+  }
+
+  cambiarEstado(servicio: any): void {
+    const id = this.idDe(servicio);
+    this.cambiandoId = id;
+    this.mensaje = '';
+    this.http.patch<{ estado: string }>('/api/servicios/' + id + '/estado', {}).subscribe({
+      next: (respuesta) => {
+        this.zone.run(() => {
+          servicio.estado = respuesta.estado;
+          this.cambiandoId = null;
+          this.mensaje = this.estaActivo(servicio)
+            ? servicio.nombre + ' quedó visible en el catálogo del cliente.'
+            : servicio.nombre + ' quedó oculto para los clientes.';
+          this.cdr.detectChanges();
+        });
+      },
+      error: () => {
+        this.zone.run(() => {
+          this.cambiandoId = null;
+          this.mensaje = 'No se pudo cambiar el estado de ' + servicio.nombre + '.';
+          this.cdr.detectChanges();
+        });
+      },
+    });
   }
 }

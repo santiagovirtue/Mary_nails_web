@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -20,7 +20,7 @@ export class ServiciosAdmin implements OnInit {
   tipoMensaje: 'exito' | 'error' | '' = '';
   mensajeError = '';
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone, private route: ActivatedRoute) {}
 
   ngOnInit(): void { this.cargarServicios(); }
 
@@ -34,6 +34,11 @@ export class ServiciosAdmin implements OnInit {
             precioFormateado: '$' + Number(s.precio).toLocaleString('es-CO'),
           }));
           this.cargando = false;
+          const editar = Number(this.route.snapshot.queryParamMap.get('editar'));
+          if (editar) {
+            const encontrado = this.servicios.find((item) => Number(item.id_servicio || item.id) === editar);
+            if (encontrado) this.editarServicio(encontrado);
+          }
           this.cdr.detectChanges();
         });
       },
