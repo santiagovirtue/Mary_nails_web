@@ -38,7 +38,10 @@
           </div>
         </div>
       </div>
-      <a routerLink="/reservas" [queryParams]="{ servicio: servicio.nombre }" class="btn-service">Reservar ahora</a>
+      <div class="card-actions">
+        <a routerLink="/reservas" [queryParams]="{ servicio: servicio.nombre }" class="btn-service">Reservar ahora</a>
+        <button type="button" class="btn-favorito" (click)="alternarFavorito(servicio)">{{ esFavorito(servicio) ? 'En favoritos' : 'Guardar' }}</button>
+      </div>
     </article>
   </div>
 </section>

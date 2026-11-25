@@ -23,6 +23,9 @@ import { Pagos } from './admin/pagos/pagos';
 import { Clientes } from './admin/clientes/clientes';
 import { Reportes } from './admin/reportes/reportes';
 import { Perfil } from './cliente/perfil/perfil';
+import { Favoritos } from './cliente/favoritos/favoritos';
+import { Preferencias } from './cliente/preferencias/preferencias';
+import { MensajesAdmin } from './admin/mensajes/mensajes';
 import { Contacto } from './pages/contacto/contacto';
 
 export const routes: Routes = [
@@ -57,6 +60,16 @@ export const routes: Routes = [
   {
     path: 'cliente/mis-citas',
     component: MisCitas,
+    canActivate: [clienteGuard],
+  },
+  {
+    path: 'cliente/favoritos',
+    component: Favoritos,
+    canActivate: [clienteGuard],
+  },
+  {
+    path: 'cliente/preferencias',
+    component: Preferencias,
     canActivate: [clienteGuard],
   },
 
@@ -122,6 +135,12 @@ export const routes: Routes = [
   {
     path: 'admin/reportes',
     component: Reportes,
+    canActivate: [adminGuard],
+  },
+
+  {
+    path: 'admin/mensajes',
+    component: MensajesAdmin,
     canActivate: [adminGuard],
   },
   

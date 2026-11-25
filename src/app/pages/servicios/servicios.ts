@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { FavoritosService } from '../../services/favoritos.service';
 
 @Component({
   selector: 'app-servicios',
@@ -14,7 +15,7 @@ export class Servicios implements OnInit {
   cargando = true;
   private iconos = ['💅', '✨', '🌸', '🎨', '💖', '🦋', '🌺', '💎'];
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
+  constructor(private http: HttpClient, private favoritos: FavoritosService, private router: Router, private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
   ngOnInit(): void {
     this.cargarServicios();
@@ -48,6 +49,19 @@ export class Servicios implements OnInit {
     if (!min) return 'Variable';
     if (typeof min === 'string') return min;
     return min + ' min';
+  }
+
+  esFavorito(servicio: any): boolean {
+    return this.favoritos.esFavorito(Number(servicio.id_servicio));
+  }
+
+  alternarFavorito(servicio: any): void {
+    if (!this.favoritos.sesion()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.favoritos.alternar(Number(servicio.id_servicio));
+    this.cdr.detectChanges();
   }
 
   formatearPrecio(servicio: any): string {

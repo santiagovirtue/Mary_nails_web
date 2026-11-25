@@ -1,0 +1,31 @@
+<div class="pagina-cuenta">
+  <app-menu-cuenta activo="preferencias"></app-menu-cuenta>
+  <main class="contenido">
+    <div *ngIf="!haySesion">
+      <h1>Inicia sesión para guardar tus preferencias</h1>
+      <a routerLink="/login" class="btn-primario">Iniciar sesión</a>
+    </div>
+
+    <div *ngIf="haySesion">
+      <span class="etiqueta">Área cliente</span>
+      <h1>Preferencias</h1>
+      <p class="subtitulo">Cuéntale a Mary Nails cómo prefieres tus citas. El administrador puede verlo en tu perfil.</p>
+      <p class="aviso" *ngIf="cargando">Cargando...</p>
+      <p class="aviso" *ngIf="mensaje" [class.error]="error">{{ mensaje }}</p>
+
+      <form *ngIf="!cargando" class="formulario">
+        <label>Horario que prefieres</label>
+        <select [(ngModel)]="horario" name="horario">
+          <option value="manana">Mañana</option>
+          <option value="tarde">Tarde</option>
+          <option value="fin de semana">Fin de semana</option>
+        </select>
+
+        <label>Notas para tu cita</label>
+        <textarea name="notas" rows="5" [(ngModel)]="notas" placeholder="Ej: Prefiero diseños discretos y esmalte semipermanente."></textarea>
+
+        <button type="button" (click)="guardar()" [disabled]="guardando">{{ guardando ? 'Guardando...' : 'Guardar preferencias' }}</button>
+      </form>
+    </div>
+  </main>
+</div>

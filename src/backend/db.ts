@@ -254,6 +254,16 @@ async function crearSqlite(): Promise<PoolSqlite> {
       fecha TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (id_cita) REFERENCES citas(id_cita)
     );
+    CREATE TABLE IF NOT EXISTS mensajes (
+      id_mensaje INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      correo TEXT NOT NULL,
+      telefono TEXT,
+      asunto TEXT NOT NULL,
+      mensaje TEXT NOT NULL,
+      fecha TEXT DEFAULT CURRENT_TIMESTAMP,
+      leido INTEGER DEFAULT 0
+    );
   `);
   const existentes = db.prepare('SELECT COUNT(*) AS total FROM usuarios').all() as Array<{ total: number }>;
   if (Number(existentes[0]?.total ?? 0) === 0) {

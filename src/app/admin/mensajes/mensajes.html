@@ -1,0 +1,21 @@
+<section class="mensajes-admin">
+  <span class="etiqueta">Configuración</span>
+  <h1>Mensajes de contacto</h1>
+  <p>Lo que las clientas escriben en la página de contacto queda guardado aquí.</p>
+  <p class="aviso" *ngIf="cargando">Cargando mensajes...</p>
+  <p class="aviso" *ngIf="aviso">{{ aviso }}</p>
+  <p class="aviso" *ngIf="!cargando && mensajes.length === 0">Todavía no hay mensajes.</p>
+
+  <article class="mensaje" *ngFor="let mensaje of mensajes" [class.leido]="mensaje.leido">
+    <header>
+      <div>
+        <h2>{{ mensaje.nombre }}</h2>
+        <small>{{ mensaje.correo }} · {{ mensaje.telefono || 'Sin teléfono' }} · {{ mensaje.fecha | date:'d MMM y, h:mm a' }}</small>
+      </div>
+      <span>{{ mensaje.asunto }}</span>
+    </header>
+    <p>{{ mensaje.mensaje }}</p>
+    <button type="button" *ngIf="!mensaje.leido" (click)="marcarLeido(mensaje)">Marcar como leído</button>
+    <small *ngIf="mensaje.leido">Leído</small>
+  </article>
+</section>

@@ -3,10 +3,11 @@ import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MenuCuenta } from '../menu-cuenta/menu-cuenta';
 
 @Component({
   selector: 'app-perfil',
-  imports: [NgIf, FormsModule, RouterLink],
+  imports: [NgIf, FormsModule, RouterLink, MenuCuenta],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })

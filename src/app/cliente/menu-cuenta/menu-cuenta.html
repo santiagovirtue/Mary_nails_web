@@ -1,0 +1,15 @@
+<aside class="sidebar-cliente">
+  <div class="sidebar-header">
+    <h3>Mi Cuenta</h3>
+  </div>
+  <nav class="sidebar-nav">
+    <a routerLink="/cliente/perfil" class="nav-item" [class.activo]="activo === 'perfil'">Perfil</a>
+    <a routerLink="/cliente/mis-citas" class="nav-item" [class.activo]="activo === 'citas'">Mis citas</a>
+    <a routerLink="/cliente/favoritos" class="nav-item" [class.activo]="activo === 'favoritos'">Favoritos</a>
+    <a routerLink="/cliente/preferencias" class="nav-item" [class.activo]="activo === 'preferencias'">Preferencias</a>
+    <a routerLink="/cliente/calificar-servicio" class="nav-item" [class.activo]="activo === 'calificar'">Calificar</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button type="button" class="btn-cerrar-sesion" (click)="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</aside>

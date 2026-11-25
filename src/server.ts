@@ -14,6 +14,7 @@ import { clientesRouter } from './backend/routes/clientes.routes';
 import { dashboardRouter } from './backend/routes/dashboard.routes';
 import { perfilRouter } from './backend/routes/perfil.routes';
 import { calificacionesRouter } from './backend/routes/calificaciones.routes';
+import { mensajesRouter } from './backend/routes/mensajes.routes';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/api/clientes', clientesRouter);
 app.use('/api/pagos', pagosRouter);
 app.use('/api/reportes', reportesRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/mensajes', mensajesRouter);
 
 app.get('/api/health', async (_req, res) => {
   try {

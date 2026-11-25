@@ -42,7 +42,7 @@
           <textarea name="mensaje" placeholder="Escribe tu mensaje aquí..." [(ngModel)]="mensaje"></textarea>
         </div>
 
-        <button type="button" class="btn-submit" (click)="enviarMensaje()">Enviar mensaje</button>
+        <button type="button" class="btn-submit" (click)="enviarMensaje()" [disabled]="enviando">{{ enviando ? 'Enviando...' : 'Enviar mensaje' }}</button>
 
         <p class="success-message" *ngIf="mensajeExito">{{ mensajeExito }}</p>
         <p class="error-message" *ngIf="mensajeError">{{ mensajeError }}</p>
@@ -95,14 +95,6 @@
         </a>
       </div>
 
-      <div class="social-links">
-        <h3>Síguenos</h3>
-        <div class="social-icons">
-          <a href="#" target="_blank" class="social-icon">Facebook</a>
-          <a href="#" target="_blank" class="social-icon">Instagram</a>
-          <a href="#" target="_blank" class="social-icon">TikTok</a>
-        </div>
-      </div>
     </div>
   </div>
 </section>

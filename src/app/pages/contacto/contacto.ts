@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-contacto',
@@ -16,6 +17,9 @@ export class Contacto {
   mensaje = '';
   mensajeExito = '';
   mensajeError = '';
+  enviando = false;
+
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
   enviarMensaje(): void {
     this.mensajeExito = '';
@@ -26,11 +30,33 @@ export class Contacto {
       return;
     }
 
-    this.mensajeExito = 'Tu mensaje fue enviado correctamente. Te contactaremos pronto.';
-    this.nombre = '';
-    this.correo = '';
-    this.telefono = '';
-    this.asunto = '';
-    this.mensaje = '';
+    this.enviando = true;
+    this.http.post('/api/mensajes', {
+      nombre: this.nombre,
+      correo: this.correo,
+      telefono: this.telefono,
+      asunto: this.asunto,
+      mensaje: this.mensaje,
+    }).subscribe({
+      next: () => {
+        this.zone.run(() => {
+          this.enviando = false;
+          this.mensajeExito = 'Tu mensaje fue enviado. Mary Nails lo verá en el panel de administración.';
+          this.nombre = '';
+          this.correo = '';
+          this.telefono = '';
+          this.asunto = '';
+          this.mensaje = '';
+          this.cdr.detectChanges();
+        });
+      },
+      error: () => {
+        this.zone.run(() => {
+          this.enviando = false;
+          this.mensajeError = 'No se pudo enviar el mensaje. Inténtalo de nuevo.';
+          this.cdr.detectChanges();
+        });
+      },
+    });
   }
 }

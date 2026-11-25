@@ -13,6 +13,7 @@
 
     <a routerLink="/cliente/perfil" *ngIf="clienteLogueado">Mi Perfil</a>
     <a routerLink="/cliente/mis-citas" *ngIf="clienteLogueado">Mis citas</a>
+    <a routerLink="/cliente/favoritos" *ngIf="clienteLogueado">Favoritos</a>
     <a routerLink="/cliente/calificar-servicio" *ngIf="clienteLogueado">Calificar</a>
 
     <button type="button" class="logout-link" *ngIf="clienteLogueado" (click)="cerrarSesion()">Cerrar sesión</button>

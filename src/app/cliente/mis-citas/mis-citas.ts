@@ -3,10 +3,11 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MenuCuenta } from '../menu-cuenta/menu-cuenta';
 
 @Component({
   selector: 'app-mis-citas',
-  imports: [NgFor, NgIf, FormsModule, RouterLink],
+  imports: [NgFor, NgIf, FormsModule, RouterLink, MenuCuenta],
   templateUrl: './mis-citas.html',
   styleUrl: './mis-citas.css',
 })

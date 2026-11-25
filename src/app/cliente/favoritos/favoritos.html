@@ -1,0 +1,33 @@
+<div class="pagina-cuenta">
+  <app-menu-cuenta activo="favoritos"></app-menu-cuenta>
+  <main class="contenido">
+    <div *ngIf="!haySesion" class="vacio">
+      <h1>Inicia sesión para ver tus favoritos</h1>
+      <button type="button" class="btn-primario" (click)="irALogin()">Iniciar sesión</button>
+    </div>
+
+    <div *ngIf="haySesion">
+      <span class="etiqueta">Área cliente</span>
+      <h1>Servicios favoritos</h1>
+      <p class="subtitulo">Los servicios que marcaste con el corazón en el catálogo.</p>
+
+      <p class="vacio" *ngIf="cargando">Cargando favoritos...</p>
+      <p class="vacio" *ngIf="!cargando && servicios.length === 0">Todavía no tienes favoritos. Entra a Servicios y marca los que te gusten.</p>
+
+      <div class="lista" *ngIf="!cargando && servicios.length > 0">
+        <article class="tarjeta" *ngFor="let servicio of servicios">
+          <img *ngIf="servicio.imagen" [src]="servicio.imagen" [alt]="servicio.nombre" />
+          <div>
+            <h2>{{ servicio.nombre }}</h2>
+            <p>{{ servicio.descripcion }}</p>
+            <strong>{{ formatearPrecio(servicio) }}</strong>
+            <div class="acciones">
+              <a [routerLink]="['/reservas']" [queryParams]="{ servicio: servicio.nombre }">Reservar</a>
+              <button type="button" (click)="quitar(servicio.id_servicio)">Quitar</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+</div>
