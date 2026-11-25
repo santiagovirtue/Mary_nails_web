@@ -3,7 +3,7 @@ import express from 'express';
 import { join } from 'node:path';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { getDbStatus, testConnection } from './backend/db';
+import { baseEsPersistente, getDbStatus, testConnection } from './backend/db';
 import { reservasRouter } from './backend/routes/reservas.routes';
 import { serviciosRouter } from './backend/routes/servicios.routes';
 import { disponibilidadRouter } from './backend/routes/disponibilidad.routes';
@@ -44,7 +44,12 @@ app.use('/api/mensajes', mensajesRouter);
 app.get('/api/health', async (_req, res) => {
   try {
     const baseDeDatos = await getDbStatus();
-    res.json({ status: 'OK', mensaje: 'MaryNails API funcionando ✅', baseDeDatos });
+    res.json({
+      status: 'OK',
+      mensaje: 'MaryNails API funcionando ✅',
+      baseDeDatos,
+      persistente: baseDeDatos === 'mysql' || baseEsPersistente(),
+    });
   } catch (error) {
     console.error('Health sin base de datos:', error);
     res.json({

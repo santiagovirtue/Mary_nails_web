@@ -189,8 +189,18 @@ class PoolSqlite {
   }
 }
 
+function carpetaDatos(): string {
+  const volumen = process.env['RAILWAY_VOLUME_MOUNT_PATH'];
+  if (volumen && volumen.trim()) return volumen;
+  return join(process.cwd(), 'data');
+}
+
+export function baseEsPersistente(): boolean {
+  return Boolean(process.env['RAILWAY_VOLUME_MOUNT_PATH']?.trim());
+}
+
 async function crearSqlite(): Promise<PoolSqlite> {
-  const carpeta = join(process.cwd(), 'data');
+  const carpeta = carpetaDatos();
   mkdirSync(carpeta, { recursive: true });
   const db = await abrirSqlite(join(carpeta, 'mary-nails.sqlite'));
   db.exec('PRAGMA foreign_keys = ON');
@@ -340,7 +350,7 @@ function asegurar(): Promise<void> {
       }
       activo = await crearSqlite();
       motor = 'sqlite';
-      console.log('Base local lista en data/mary-nails.sqlite');
+      console.log('Base local lista en', join(carpetaDatos(), 'mary-nails.sqlite'));
     })();
   }
   return listo;
@@ -358,5 +368,6 @@ export const pool = {
 export async function testConnection(): Promise<void> {
   await asegurar();
   if (motor === 'mysql') console.log('Mary Nails usa MySQL.');
-  else console.log('Mary Nails usa la base local porque MySQL no está disponible.');
+  else if (baseEsPersistente()) console.log('Mary Nails guarda la base en el volumen de Railway. Los datos se conservan al dormir el servicio.');
+  else console.log('Mary Nails usa la base local temporal porque todavía no hay un volumen.');
 }
